@@ -1,0 +1,18 @@
+[
+    {
+        "name": "Workout A",
+        "exercises": [
+            { "name": "Squat" },
+            { "name": "Incline Bench" },
+            { "name": "Row" }
+        ]
+    },
+    {
+        "name": "Workout B",
+        "exercises": [
+            { "name": "Overhead press" },
+            { "name": "Curls" },
+            { "name": "Pressdown" }
+        ]
+    }
+]
