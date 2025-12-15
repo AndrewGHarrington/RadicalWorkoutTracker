@@ -60,6 +60,18 @@ struct EditWorkoutView: View {
                             let newWorkout = Workout()
                             newWorkout.name = workoutName
                             newWorkout.exercises = exercises
+                            
+                            // create exercise set, update its reps base on exercise
+                            // append to exercise's exerciseSets property
+                            for exercise in exercises {
+                                for _ in 0..<exercise.sets {
+                                    let exerciseSet = ExerciseSet()
+                                    exerciseSet.reps = exercise.startReps
+                                    
+                                    exercise.exerciseSets.append(exerciseSet)
+                                }
+                            }
+                            
                             model.workouts.append(newWorkout)
                         } else {
                             if let index = model.workouts.firstIndex(where: { $0.id == workout?.id }) {

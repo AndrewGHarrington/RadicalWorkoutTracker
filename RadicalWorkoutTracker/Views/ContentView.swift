@@ -17,28 +17,33 @@ struct ContentView: View {
         NavigationView {
             List {
                 ForEach(model.workouts) { workout in
-                    VStack(alignment: .leading) {
-                        Text(workout.name)
-                            .font(.system(size: 28))
-                            .fontWeight(.bold)
-                            .swipeActions(edge: .trailing) {
-                                Button {
-                                    selectedWorkout = workout
-                                } label: {
-                                    Label("Edit", systemImage: "pencil")
-                                        .tint(.yellow)
-                                        .labelStyle(.iconOnly)
+                    NavigationLink {
+                        ExecuteWorkoutView(workout: workout)
+                    } label: {
+                        VStack(alignment: .leading) {
+                            Text(workout.name)
+                                .font(.system(size: 28))
+                                .fontWeight(.bold)
+                                .swipeActions(edge: .trailing) {
+                                    Button {
+                                        selectedWorkout = workout
+                                    } label: {
+                                        Label("Edit", systemImage: "pencil")
+                                            .tint(.yellow)
+                                            .labelStyle(.iconOnly)
+                                    }
+                                    
+                                    Button("Delete", systemImage: "trash", role: .destructive) {}
+                                    .tint(.red)
+                                    .labelStyle(.iconOnly)
                                 }
-                                
-                                Button("Delete", systemImage: "trash", role: .destructive) {}
-                                .tint(.red)
-                                .labelStyle(.iconOnly)
+                            
+                            ForEach(workout.exercises) { exercise in
+                                Text("• \(exercise.name)")
                             }
-                        
-                        ForEach(workout.exercises) { exercise in
-                            Text("• \(exercise.name)")
                         }
                     }
+
                 }
                 .onDelete(perform: removeRows)
             }

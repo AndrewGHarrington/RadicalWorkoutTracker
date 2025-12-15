@@ -56,6 +56,10 @@ struct EditExerciseRowView: View {
                     .font(.system(size: 24)).bold()
                     .onChange(of: startReps) { oldValue, newValue in
                         exercise.startReps = startReps
+                        
+                        for exerciseSet in exercise.exerciseSets {
+                            exerciseSet.reps = exercise.startReps
+                        }
                     }
             }
             
@@ -97,8 +101,8 @@ struct EditExerciseRowView: View {
             
             // MARK: Exercise notes
             TextField("Exercise notes", text: $notes)
-                .onChange(of: progressionSteps) { oldValue, newValue in
-                    exercise.progressionSteps = progressionSteps
+                .onChange(of: notes) { oldValue, newValue in
+                    exercise.notes = notes
                 }
             
             Divider()

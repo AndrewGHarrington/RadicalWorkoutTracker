@@ -23,6 +23,10 @@ struct DataService {
                 
                 for exercise in workout.exercises {
                     exercise.id = UUID()
+                    
+                    for exerciseSet in exercise.exerciseSets {
+                        exerciseSet.id = UUID()
+                    }
                 }
             }
             

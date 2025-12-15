@@ -14,6 +14,6 @@ class Exercise: Identifiable, Codable {
     var startReps = 6
     var targetReps = 8
     var progressionSteps = 2.5
-    var weight = 0.0
     var notes = ""
+    var exerciseSets = [ExerciseSet]()
 }

@@ -8,8 +8,24 @@
                 "startReps": 6,
                 "targetReps": 8,
                 "progressionSteps": 2.5,
-                "weight": 0.0,
-                "notes": "Do box squat if back gets sore"
+                "notes": "Do box squat if back gets sore",
+                "exerciseSets": [
+                    {
+                        "reps": 0,
+                        "weight": 0.0,
+                        "isComplete": false
+                    },
+                    {
+                        "reps": 0,
+                        "weight": 0.0,
+                        "isComplete": false
+                    },
+                    {
+                        "reps": 0,
+                        "weight": 0.0,
+                        "isComplete": false
+                    }
+                ]
             },
             {
                 "name": "Incline Bench",
@@ -18,7 +34,24 @@
                 "targetReps": 8,
                 "progressionSteps": 2.5,
                 "weight": 0.0,
-                "notes": ""
+                "notes": "",
+                "exerciseSets": [
+                    {
+                        "reps": 0,
+                        "weight": 0.0,
+                        "isComplete": false
+                    },
+                    {
+                        "reps": 0,
+                        "weight": 0.0,
+                        "isComplete": false
+                    },
+                    {
+                        "reps": 0,
+                        "weight": 0.0,
+                        "isComplete": false
+                    }
+                ]
                 
             },
             {
@@ -28,7 +61,24 @@
                 "targetReps": 8,
                 "progressionSteps": 2.5,
                 "weight": 0.0,
-                "notes": ""
+                "notes": "",
+                "exerciseSets": [
+                    {
+                        "reps": 0,
+                        "weight": 0.0,
+                        "isComplete": false
+                    },
+                    {
+                        "reps": 0,
+                        "weight": 0.0,
+                        "isComplete": false
+                    },
+                    {
+                        "reps": 0,
+                        "weight": 0.0,
+                        "isComplete": false
+                    }
+                ]
             }
         ]
     },
@@ -42,7 +92,24 @@
                 "targetReps": 8,
                 "progressionSteps": 2.5,
                 "weight": 0.0,
-                "notes": ""
+                "notes": "",
+                "exerciseSets": [
+                    {
+                        "reps": 0,
+                        "weight": 0.0,
+                        "isComplete": false
+                    },
+                    {
+                        "reps": 0,
+                        "weight": 0.0,
+                        "isComplete": false
+                    },
+                    {
+                        "reps": 0,
+                        "weight": 0.0,
+                        "isComplete": false
+                    }
+                ]
             },
             {
                 "name": "Curls",
@@ -51,7 +118,24 @@
                 "targetReps": 8,
                 "progressionSteps": 2.5,
                 "weight": 0.0,
-                "notes": ""
+                "notes": "",
+                "exerciseSets": [
+                    {
+                        "reps": 0,
+                        "weight": 0.0,
+                        "isComplete": false
+                    },
+                    {
+                        "reps": 0,
+                        "weight": 0.0,
+                        "isComplete": false
+                    },
+                    {
+                        "reps": 0,
+                        "weight": 0.0,
+                        "isComplete": false
+                    }
+                ]
             },
             {
                 "name": "Pressdown",
@@ -60,7 +144,24 @@
                 "targetReps": 8,
                 "progressionSteps": 2.5,
                 "weight": 0.0,
-                "notes": ""
+                "notes": "",
+                "exerciseSets": [
+                    {
+                        "reps": 0,
+                        "weight": 0.0,
+                        "isComplete": false
+                    },
+                    {
+                        "reps": 0,
+                        "weight": 0.0,
+                        "isComplete": false
+                    },
+                    {
+                        "reps": 0,
+                        "weight": 0.0,
+                        "isComplete": false
+                    }
+                ]
             }
         ]
     }
