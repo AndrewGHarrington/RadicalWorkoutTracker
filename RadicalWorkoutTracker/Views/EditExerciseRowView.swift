@@ -9,12 +9,15 @@ import SwiftUI
 
 struct EditExerciseRowView: View {
     var exercise: Exercise
+    @State private var newExercises = [Exercise]()
     @State private var exerciseName = ""
     @State private var sets = 0
     @State private var startReps = 0
     @State private var targetReps = 0
     @State private var progressionSteps = 0.0
     @State private var notes = ""
+    
+    let onDelete: () -> Void
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -111,8 +114,11 @@ struct EditExerciseRowView: View {
             HStack {
                 Spacer()
                 Button("Delete exercise", role: .destructive) {
-                    // TODO: Delete exercise
+                    // Delete exercise
+                    onDelete()
                 }
+                .buttonStyle(.borderless)
+                
                 Spacer()
             }
             .padding(.top, 5)
@@ -130,5 +136,5 @@ struct EditExerciseRowView: View {
 }
 
 #Preview {
-    EditExerciseRowView(exercise: Exercise())
+    EditExerciseRowView(exercise: Exercise(), onDelete: {})
 }

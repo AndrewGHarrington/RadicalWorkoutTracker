@@ -40,10 +40,24 @@ struct EditWorkoutView: View {
                 TextField("Edit workout name", text: $workoutName)
                     .font(.system(size: 20)).bold()
                 
-                List {
-                    ForEach($exercises) { $exercise in
-                        Section {
-                            EditExerciseRowView(exercise: exercise)
+                ScrollViewReader { proxy in
+                    List {
+                        ForEach(exercises) { exercise in
+                            Section {
+                                EditExerciseRowView(exercise: exercise) {
+                                    if let index = exercises.firstIndex(where: { $0.id == exercise.id }) {
+                                        exercises.remove(at: index)
+                                    }
+                                }
+                                .id(exercise.id)
+                            }
+                        }
+                    }
+                    .onChange(of: exercises.count) {
+                        guard let lastId = exercises.last?.id else { return }
+                        
+                        withAnimation {
+                            proxy.scrollTo(lastId, anchor: .bottom)
                         }
                     }
                 }

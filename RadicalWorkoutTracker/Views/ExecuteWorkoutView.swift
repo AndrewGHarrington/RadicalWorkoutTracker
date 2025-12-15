@@ -10,6 +10,8 @@ import SwiftUI
 struct ExecuteWorkoutView: View {
     var model: WorkoutModel
     var workout: Workout
+    var logModel: LogEntryModel
+    
     // just used for cancel to throw away any changes to workout
     @State private var workoutCopy = Workout()
     
@@ -28,8 +30,9 @@ struct ExecuteWorkoutView: View {
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Save", role: .confirm) {
-                    // Save workout
-                    let _ = LogEntry(entry: workout)
+                    // MARK: Save workout
+                    let newLog = LogEntry(entry: workout)
+                    logModel.entries.append(newLog)
                     
                     for exercise in workout.exercises {
                         for exerciseSet in exercise.exerciseSets {
@@ -86,5 +89,5 @@ struct ExecuteWorkoutView: View {
 
 #Preview {
     let model = WorkoutModel()
-    ExecuteWorkoutView(model: model, workout: model.workouts[0])
+    ExecuteWorkoutView(model: model, workout: model.workouts[0], logModel: LogEntryModel())
 }

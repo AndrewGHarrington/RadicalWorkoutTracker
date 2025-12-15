@@ -7,6 +7,7 @@
 
 import Foundation
 
-struct LogEntry: Codable {
-    let entry: Workout
+struct LogEntry: Identifiable, Codable {
+    var id = UUID()
+    var entry = Workout()
 }
