@@ -15,37 +15,57 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(model.workouts) { workout in
-                    NavigationLink {
-                        ExecuteWorkoutView(workout: workout)
-                    } label: {
-                        VStack(alignment: .leading) {
-                            Text(workout.name)
-                                .font(.system(size: 28))
-                                .fontWeight(.bold)
-                                .swipeActions(edge: .trailing) {
-                                    Button {
-                                        selectedWorkout = workout
-                                    } label: {
-                                        Label("Edit", systemImage: "pencil")
-                                            .tint(.yellow)
-                                            .labelStyle(.iconOnly)
-                                    }
-                                    
-                                    Button("Delete", systemImage: "trash", role: .destructive) {}
-                                    .tint(.red)
-                                    .labelStyle(.iconOnly)
-                                }
-                            
-                            ForEach(workout.exercises) { exercise in
-                                Text("• \(exercise.name)")
-                            }
-                        }
+            Group {
+                if model.workouts.isEmpty {
+                    Button("Add workout") {
+                        isAddingWorkouts.toggle()
                     }
+                        .padding(.horizontal, 50)
+                        .padding(.vertical, 10)
+                        .background(.mint)
+                        .foregroundStyle(.white)
+                        .font(.system(size: 20))
+                        .bold()
+                        .clipShape(.rect(cornerRadius: 5))
+                        .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.2), radius: 5, y: 5)
+                } else {
+                    List {
+                        ForEach(model.workouts) { workout in
+                            NavigationLink {
+                                ExecuteWorkoutView(model: model, workout: workout)
+                            } label: {
+                                VStack(alignment: .leading) {
+                                    Text(workout.name)
+                                        .font(.system(size: 28))
+                                        .fontWeight(.bold)
+                                        .swipeActions(edge: .trailing) {
+                                            Button {
+                                                selectedWorkout = workout
+                                            } label: {
+                                                Label("Edit", systemImage: "pencil")
+                                                    .tint(.yellow)
+                                                    .labelStyle(.iconOnly)
+                                            }
+                                            
+                                            Button("Delete", systemImage: "trash", role: .destructive) {
+                                                if let index = model.workouts.firstIndex(where: { $0.id == workout.id }) {
+                                                    model.workouts.remove(at: index)
+                                                }
+                                            }
+                                            .tint(.red)
+                                            .labelStyle(.iconOnly)
+                                        }
+                                    
+                                    ForEach(workout.exercises) { exercise in
+                                        Text("• \(exercise.name)")
+                                    }
+                                }
+                            }
 
+                        }
+                        //.onDelete(perform: removeRows)
+                    }
                 }
-                .onDelete(perform: removeRows)
             }
             .navigationTitle("Workouts")
             .toolbar {
@@ -62,9 +82,9 @@ struct ContentView: View {
         }
     }
     
-    func removeRows(at offsets: IndexSet) {
-        model.workouts.remove(atOffsets: offsets)
-    }
+//    func removeRows(at offsets: IndexSet) {
+//        model.workouts.remove(atOffsets: offsets)
+//    }
 }
 
 #Preview {

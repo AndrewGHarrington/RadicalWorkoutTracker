@@ -47,6 +47,9 @@ struct ExecuteSetRowView: View {
                     .accessibilityLabel("Weight")
                 Stepper("Weight Reps", value: $weight, in: 0...10000, step: progressionSteps)
                     .labelsHidden()
+                    .onChange(of: weight) { oldValue, newValue in
+                        exercise.exerciseSets[index].weight = weight
+                    }
             }
         }
         .onAppear {

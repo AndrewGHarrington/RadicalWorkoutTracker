@@ -97,10 +97,6 @@ struct EditWorkoutView: View {
             }
         }
     }
-    
-    func updateExercise(_ exercise: Exercise) {
-        
-    }
 }
 
 #Preview {
