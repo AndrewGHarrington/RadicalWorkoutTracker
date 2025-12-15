@@ -11,15 +11,47 @@ struct EditWorkoutView: View {
     var model: WorkoutModel
     var workout: Workout?
     @State private var workoutName = "Workout 1"
+    @State private var exerciseName = ""
+    @State private var exercises = [Exercise]()
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
         NavigationView {
-            Form {
-                TextField("Add workout", text: $workoutName)
-                    .font(.title).bold()
+            VStack(alignment: .leading, spacing: 20) {
+                HStack {
+                    Button {
+                        // append exercise to exercises
+                        if exerciseName != "" {
+                            let newExercise = Exercise()
+                            newExercise.name = exerciseName
+                            exercises.append(newExercise)
+                            exerciseName = ""
+                        }
+                    } label: {
+                        Image(systemName: "plus.square")
+                    }
+                    .accessibilityLabel("Add exercise")
+                    
+                    TextField("Exercise name", text: $exerciseName)
+                }
+                
+                Divider()
+                
+                TextField("Edit workout name", text: $workoutName)
+                    .font(.system(size: 20)).bold()
+                
+                List {
+                    ForEach($exercises) { $exercise in
+                        Section {
+                            EditExerciseRowView(exercise: exercise)
+                        }
+                    }
+                }
+                
+                Spacer()
             }
-            .navigationTitle("Add Workout")
+            .padding()
+            .navigationTitle("Edit Workout")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
@@ -27,11 +59,13 @@ struct EditWorkoutView: View {
                         if workout == nil {
                             let newWorkout = Workout()
                             newWorkout.name = workoutName
+                            newWorkout.exercises = exercises
                             model.workouts.append(newWorkout)
                         } else {
                             if let index = model.workouts.firstIndex(where: { $0.id == workout?.id }) {
                                 workout!.name = workoutName
                                 model.workouts[index] = workout!
+                                model.workouts[index].exercises = exercises
                             }
                         }
                         
@@ -47,8 +81,13 @@ struct EditWorkoutView: View {
         .onAppear {
             if workout != nil {
                 workoutName = workout!.name
+                exercises = workout!.exercises
             }
         }
+    }
+    
+    func updateExercise(_ exercise: Exercise) {
+        
     }
 }
 

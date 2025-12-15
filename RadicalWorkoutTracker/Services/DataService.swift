@@ -9,30 +9,26 @@ import Foundation
 
 struct DataService {
     static func getTempData() -> [Workout] {
-        let pathString = Bundle.main.path(forResource: "data", ofType: "json")
+        guard let url = Bundle.main.url(forResource: "data", withExtension: "json") else {
+            return [Workout]()
+        }
         
-        if let path = pathString {
-            let url = URL(filePath: path)
+        do {
+            let data = try Data(contentsOf: url)
+            let decoder = JSONDecoder()
+            let workouts = try decoder.decode([Workout].self, from: data)
             
-            do {
-                let data = try Data(contentsOf: url)
+            for workout in workouts {
+                workout.id = UUID()
                 
-                let decoder = JSONDecoder()
-                
-                do {
-                    let workouts = try decoder.decode([Workout].self, from: data)
-                    
-                    for workout in workouts {
-                        workout.id = UUID()
-                    }
-                    
-                    return workouts
-                } catch {
-                    print(error)
+                for exercise in workout.exercises {
+                    exercise.id = UUID()
                 }
-            } catch {
-                print(error)
             }
+            
+            return workouts
+        } catch {
+            print(error)
         }
         
         return [Workout]()

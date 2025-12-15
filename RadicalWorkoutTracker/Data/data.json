@@ -2,17 +2,66 @@
     {
         "name": "Workout A",
         "exercises": [
-            { "name": "Squat" },
-            { "name": "Incline Bench" },
-            { "name": "Row" }
+            {
+                "name": "Squat",
+                "sets": 3,
+                "startReps": 6,
+                "targetReps": 8,
+                "progressionSteps": 2.5,
+                "weight": 0.0,
+                "notes": "Do box squat if back gets sore"
+            },
+            {
+                "name": "Incline Bench",
+                "sets": 3,
+                "startReps": 6,
+                "targetReps": 8,
+                "progressionSteps": 2.5,
+                "weight": 0.0,
+                "notes": ""
+                
+            },
+            {
+                "name": "Row",
+                "sets": 3,
+                "startReps": 6,
+                "targetReps": 8,
+                "progressionSteps": 2.5,
+                "weight": 0.0,
+                "notes": ""
+            }
         ]
     },
     {
         "name": "Workout B",
         "exercises": [
-            { "name": "Overhead press" },
-            { "name": "Curls" },
-            { "name": "Pressdown" }
+            {
+                "name": "Overhead press",
+                "sets": 3,
+                "startReps": 6,
+                "targetReps": 8,
+                "progressionSteps": 2.5,
+                "weight": 0.0,
+                "notes": ""
+            },
+            {
+                "name": "Curls",
+                "sets": 3,
+                "startReps": 6,
+                "targetReps": 8,
+                "progressionSteps": 2.5,
+                "weight": 0.0,
+                "notes": ""
+            },
+            {
+                "name": "Pressdown",
+                "sets": 3,
+                "startReps": 6,
+                "targetReps": 8,
+                "progressionSteps": 2.5,
+                "weight": 0.0,
+                "notes": ""
+            }
         ]
     }
 ]

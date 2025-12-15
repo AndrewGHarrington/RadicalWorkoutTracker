@@ -17,20 +17,28 @@ struct ContentView: View {
         NavigationView {
             List {
                 ForEach(model.workouts) { workout in
-                    Text(workout.name)
-                        .swipeActions(edge: .trailing) {
-                            Button {
-                                selectedWorkout = workout
-                            } label: {
-                                Label("Edit", systemImage: "pencil")
-                                    .tint(.yellow)
-                                    .labelStyle(.iconOnly)
+                    VStack(alignment: .leading) {
+                        Text(workout.name)
+                            .font(.system(size: 28))
+                            .fontWeight(.bold)
+                            .swipeActions(edge: .trailing) {
+                                Button {
+                                    selectedWorkout = workout
+                                } label: {
+                                    Label("Edit", systemImage: "pencil")
+                                        .tint(.yellow)
+                                        .labelStyle(.iconOnly)
+                                }
+                                
+                                Button("Delete", systemImage: "trash", role: .destructive) {}
+                                .tint(.red)
+                                .labelStyle(.iconOnly)
                             }
-                            
-                            Button("Delete", systemImage: "trash", role: .destructive) {}
-                            .tint(.red)
-                            .labelStyle(.iconOnly)
+                        
+                        ForEach(workout.exercises) { exercise in
+                            Text("• \(exercise.name)")
                         }
+                    }
                 }
                 .onDelete(perform: removeRows)
             }
