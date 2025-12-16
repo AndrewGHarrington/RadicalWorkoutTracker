@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct ContentView: View {
-    @ObservedObject var logModel = LogEntryModel()
+    @StateObject var logModel = LogEntryModel()
     
     var body: some View {
         TabView {
-            WorkoutsView(logModel: logModel)
+            WorkoutsView()
                 .tabItem {
                     VStack {
                         Image(systemName: "flame")
@@ -20,7 +20,7 @@ struct ContentView: View {
                     }
                 }
             
-            LogsView(logModel: logModel)
+            LogsView()
                 .tabItem {
                     VStack {
                         Image(systemName: "chart.bar.fill")
@@ -28,6 +28,7 @@ struct ContentView: View {
                     }
                 }
         }
+        .environmentObject(logModel)
     }
 }
 

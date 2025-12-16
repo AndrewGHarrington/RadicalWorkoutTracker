@@ -8,12 +8,14 @@
 import SwiftUI
 
 struct ExecuteSetRowView: View {
+    var workout: Workout
     var exercise: Exercise
     var index: Int
     @State private var completedReps = 0
     @State private var weight = 0.0
     @State private var progressionSteps = 0.0
     @State private var isComplete = false
+    @State private var weightAdjusted = false
     
     var body: some View {
         HStack {
@@ -51,17 +53,31 @@ struct ExecuteSetRowView: View {
                         exercise.exerciseSets[index].weight = weight
                     }
             }
+            .overlay(alignment: .topTrailing) {
+                Text("+ \(progressionSteps.formatted())")
+                    .padding(2)
+                    .background(.green)
+                    .clipShape(.rect(cornerRadius: 5))
+                    .foregroundStyle(.white)
+                    .bold()
+                    .opacity(weightAdjusted ? 1 : 0)
+            }
         }
         .onAppear {
             completedReps = exercise.startReps
             weight = exercise.exerciseSets[index].weight
             progressionSteps = exercise.progressionSteps
             isComplete = exercise.exerciseSets[index].isComplete
+            
+            if workout.hasBeenLogged {
+                weight += progressionSteps
+                weightAdjusted = true
+            }
         }
     }
 }
 
 #Preview {
     let model = WorkoutModel()
-    ExecuteSetRowView(exercise: model.workouts[0].exercises[0], index: 0)
+    ExecuteSetRowView(workout: Workout(), exercise: model.workouts[0].exercises[0], index: 0)
 }

@@ -11,4 +11,6 @@ class Workout: Identifiable, Codable {
     var id: UUID? = UUID()
     var name = ""
     var exercises = [Exercise]()
+    var hasBeenLogged = false
+    var dateCompleted = Date()
 }

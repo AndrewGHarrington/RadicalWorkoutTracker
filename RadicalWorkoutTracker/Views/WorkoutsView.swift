@@ -9,7 +9,7 @@ import SwiftUI
 
 struct WorkoutsView: View {
     @ObservedObject var model = WorkoutModel()
-    var logModel: LogEntryModel
+    @EnvironmentObject var logModel: LogEntryModel
     @Environment(\.dismiss) var dismiss
     @State private var isAddingWorkouts = false
     @State private var selectedWorkout: Workout?
@@ -35,7 +35,7 @@ struct WorkoutsView: View {
                             NavigationLink {
                                 ExecuteWorkoutView(model: model, workout: workout, logModel: logModel)
                             } label: {
-                                VStack(alignment: .leading) {
+                                VStack(alignment: .leading, spacing: 10) {
                                     Text(workout.name)
                                         .font(.system(size: 28))
                                         .fontWeight(.bold)
@@ -60,9 +60,12 @@ struct WorkoutsView: View {
                                     ForEach(workout.exercises) { exercise in
                                         Text("• \(exercise.name)")
                                     }
+                                    
+                                    Text(workout.hasBeenLogged ? "Last session: \(workout.dateCompleted.formatted(date: .long, time: .shortened))" : "")
+                                        .font(.system(size: 14))
+                                        .foregroundStyle(Color(red: 0.8, green: 0.8, blue: 0.8))
                                 }
                             }
-
                         }
                     }
                 }
@@ -84,5 +87,5 @@ struct WorkoutsView: View {
 }
 
 #Preview {
-    WorkoutsView(logModel: LogEntryModel())
+    WorkoutsView()
 }

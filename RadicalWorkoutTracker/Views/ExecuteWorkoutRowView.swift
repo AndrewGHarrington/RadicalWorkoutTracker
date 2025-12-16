@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ExecuteWorkoutRowView: View {
+    var workout: Workout
     var exercise: Exercise
     @State private var notes = ""
     @State private var startReps = 0
@@ -25,7 +26,7 @@ struct ExecuteWorkoutRowView: View {
             Divider()
             
             ForEach(0..<exercise.exerciseSets.count) { index in
-                ExecuteSetRowView(exercise: exercise, index: index)
+                ExecuteSetRowView(workout: workout, exercise: exercise, index: index)
                 
                 if index < exercise.exerciseSets.count - 1 {
                     Divider()
@@ -43,5 +44,5 @@ struct ExecuteWorkoutRowView: View {
 
 #Preview {
     let model = WorkoutModel()
-    ExecuteWorkoutRowView(exercise: model.workouts[0].exercises[0])
+    ExecuteWorkoutRowView(workout: Workout(), exercise: model.workouts[0].exercises[0])
 }

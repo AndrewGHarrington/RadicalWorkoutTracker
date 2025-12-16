@@ -21,7 +21,7 @@ struct ExecuteWorkoutView: View {
         VStack {
             List(workout.exercises) { exercise in
                 Section("\(exercise.name): \(exercise.startReps) - \(exercise.targetReps) reps") {
-                    ExecuteWorkoutRowView(exercise: exercise)
+                    ExecuteWorkoutRowView(workout: workout, exercise: exercise)
                 }
             }
         }
@@ -31,13 +31,15 @@ struct ExecuteWorkoutView: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Save", role: .confirm) {
                     // MARK: Save workout
+                    workout.dateCompleted = Date.now
+                    
                     let newLog = LogEntry(entry: workout)
                     logModel.entries.append(newLog)
                     
-                    for exercise in workout.exercises {
-                        for exerciseSet in exercise.exerciseSets {
-                            exerciseSet.isComplete = false
-                        }
+                    workout.hasBeenLogged = true
+                    
+                    if let index = model.workouts.firstIndex(where: { $0.id == workout.id }) {
+                        model.workouts[index] = workout
                     }
                     
                     dismiss()
@@ -59,6 +61,7 @@ struct ExecuteWorkoutView: View {
             workoutCopy.id = UUID()
             workoutCopy.name = workout.name
             workoutCopy.exercises = [Exercise]()
+            workoutCopy.hasBeenLogged = workout.hasBeenLogged
             
             for i in 0..<workout.exercises.count {
                 let exercise = Exercise()
@@ -76,9 +79,11 @@ struct ExecuteWorkoutView: View {
                     exerciseSet.id = UUID()
                     exerciseSet.reps = workout.exercises[i].exerciseSets[j].reps
                     exerciseSet.weight = workout.exercises[i].exerciseSets[j].weight
-                    exerciseSet.isComplete = workout.exercises[i].exerciseSets[j].isComplete
+                    exerciseSet.isComplete = false
                     
                     exercise.exerciseSets.append(exerciseSet)
+                    
+                    workout.exercises[i].exerciseSets[j].isComplete = false
                 }
                 
                 workoutCopy.exercises.append(exercise)
