@@ -6,9 +6,37 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
+
+struct JSONFile: FileDocument {
+
+    static var readableContentTypes: [UTType] { [.json] }
+
+    var url: URL?
+
+    init(url: URL?) {
+        self.url = url
+    }
+
+    init(configuration: ReadConfiguration) throws {
+        // Not needed for export
+    }
+
+    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        guard let url,
+              let data = try? Data(contentsOf: url) else {
+            throw CocoaError(.fileNoSuchFile)
+        }
+
+        return FileWrapper(regularFileWithContents: data)
+    }
+}
 
 struct LogsView: View {
     @EnvironmentObject var logModel: LogEntryModel
+    @State private var exportURL: URL?
+    @State private var isExporting = false
+    @State private var errorMessage: String?
     
     var body: some View {
         NavigationView {
@@ -37,7 +65,32 @@ struct LogsView: View {
                     }
                 }
             }
-                .navigationTitle("Log")
+            .navigationTitle("Log")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Export logs", systemImage: "square.and.arrow.up") {
+                        // MARK: Export logs
+                        do {
+                            exportURL = try WorkoutExporter.exportToJSON()
+                            isExporting = true
+                        } catch {
+                            errorMessage = error.localizedDescription
+                        }
+                    }
+                    .labelStyle(.iconOnly)
+                }
+            }
+            .fileExporter(
+                isPresented: $isExporting,
+                document: JSONFile(url: exportURL),
+                contentType: .json,
+                defaultFilename: "workouts_backup"
+            ) { result in
+                if case .failure(let error) = result {
+                    errorMessage = error.localizedDescription
+                }
+            }
         }
     }
     
@@ -48,4 +101,5 @@ struct LogsView: View {
 
 #Preview {
     LogsView()
+        .environmentObject(LogEntryModel())
 }

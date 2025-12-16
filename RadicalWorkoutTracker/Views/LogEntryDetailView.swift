@@ -28,7 +28,7 @@ struct LogEntryDetailView: View {
                 }
             }
         }
-        .navigationTitle(workout.name)
+        .navigationTitle(entry.entry.name)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             workout = entry.entry
