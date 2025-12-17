@@ -15,6 +15,9 @@ struct BackupWorkouts: View {
     @State private var isExporting = false
     @State private var errorMessage: String?
     @State private var fileName = ""
+    @State private var didFinishImport = false
+    @State private var alertTitle = "Workout Imported"
+    
     
     var body: some View {
         VStack {
@@ -49,6 +52,8 @@ struct BackupWorkouts: View {
             Button("Import Workouts") {
                 let workouts = DataService.getTempData(backupType: .workout)
                 workoutModel.workouts = workouts
+                alertTitle = "Workout Imported"
+                didFinishImport.toggle()
             }
                 .frame(maxWidth: 250, maxHeight: 50)
                 .background(Color(red: 34/255, green: 87/255, blue: 122/255))
@@ -66,6 +71,9 @@ struct BackupWorkouts: View {
                 }
                 
                 logModel.entries = entries
+                
+                alertTitle = "Log Imported"
+                didFinishImport.toggle()
             }
                 .frame(maxWidth: 250, maxHeight: 50)
                 .background(Color(red: 1/255, green: 42/255, blue: 74/255))
@@ -74,6 +82,9 @@ struct BackupWorkouts: View {
                 .font(.title3)
                 .bold()
         }
+        .alert(alertTitle, isPresented: $didFinishImport, actions: {
+            Button("OK", role: .close) {}
+        })
         .fileExporter(
             isPresented: $isExporting,
             document: exportURL.map { JSONDocument(fileURL: $0) },
@@ -102,5 +113,6 @@ struct BackupWorkouts: View {
 
 #Preview {
     BackupWorkouts()
+        .environmentObject(WorkoutModel())
         .environmentObject(LogEntryModel())
 }

@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct ExecuteWorkoutView: View {
-    var model: WorkoutModel
+    @EnvironmentObject var model: WorkoutModel
+    @EnvironmentObject var logModel: LogEntryModel
     var workout: Workout
-    var logModel: LogEntryModel
+    @State private var isCancelling = false
+    @State private var isSaving = false
     
     // just used for cancel to throw away any changes to workout
     @State private var workoutCopy = Workout()
@@ -30,30 +32,14 @@ struct ExecuteWorkoutView: View {
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Save", role: .confirm) {
-                    // MARK: Save workout
-                    workout.dateCompleted = Date.now
-                    
-                    let newLog = LogEntry(entry: workout)
-                    logModel.entries.append(newLog)
-                    
-                    workout.hasBeenLogged = true
-                    
-                    if let index = model.workouts.firstIndex(where: { $0.id == workout.id }) {
-                        model.workouts[index] = workout
-                    }
-                    
-                    dismiss()
+                    isSaving.toggle()
                 }
                 
             }
             
             ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel", role: .cancel) {
-                    if let index = model.workouts.firstIndex(where: { $0.id == workout.id }) {
-                        model.workouts[index] = workoutCopy
-                    }
-                    
-                    dismiss()
+                    isCancelling.toggle()
                 }
             }
         }
@@ -89,10 +75,41 @@ struct ExecuteWorkoutView: View {
                 workoutCopy.exercises.append(exercise)
             }
         }
+        .alert("Cancel workout?", isPresented: $isCancelling) {
+            Button("No", role: .cancel) {}
+            Button("Yes", role: .confirm) {
+                if let index = model.workouts.firstIndex(where: { $0.id == workout.id }) {
+                    model.workouts[index] = workoutCopy
+                    dismiss()
+                }
+            }
+        } message: {
+            Text("This session won't be saved in your log.")
+        }
+        .alert("Finish workout?", isPresented: $isSaving) {
+            Button("No", role: .cancel) {}
+            Button("Yes", role: .confirm) {
+                workout.dateCompleted = Date.now
+                
+                let newLog = LogEntry(entry: workout)
+                logModel.entries.append(newLog)
+                
+                workout.hasBeenLogged = true
+                
+                if let index = model.workouts.firstIndex(where: { $0.id == workout.id }) {
+                    model.workouts[index] = workout
+                }
+                
+                dismiss()
+            }
+        } message: {
+            Text("This will save this session to your log.")
+        }
     }
 }
 
 #Preview {
-    let model = WorkoutModel()
-    ExecuteWorkoutView(model: model, workout: model.workouts[0], logModel: LogEntryModel())
+    ExecuteWorkoutView(workout: Workout())
+        .environmentObject(WorkoutModel())
+        .environmentObject(LogEntryModel())
 }

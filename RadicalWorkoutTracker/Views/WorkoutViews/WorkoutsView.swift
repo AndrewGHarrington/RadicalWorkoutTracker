@@ -13,6 +13,8 @@ struct WorkoutsView: View {
     @Environment(\.dismiss) var dismiss
     @State private var isAddingWorkouts = false
     @State private var selectedWorkout: Workout?
+    @State private var isDeleting = false
+    @State private var workoutToBeDeleted = Workout()
     
     var body: some View {
         NavigationView {
@@ -33,7 +35,7 @@ struct WorkoutsView: View {
                     List {
                         ForEach(model.workouts) { workout in
                             NavigationLink {
-                                ExecuteWorkoutView(model: model, workout: workout, logModel: logModel)
+                                ExecuteWorkoutView(workout: workout)
                             } label: {
                                 VStack(alignment: .leading, spacing: 10) {
                                     Text(workout.name)
@@ -49,9 +51,8 @@ struct WorkoutsView: View {
                                             }
                                             
                                             Button("Delete", systemImage: "trash", role: .destructive) {
-                                                if let index = model.workouts.firstIndex(where: { $0.id == workout.id }) {
-                                                    model.workouts.remove(at: index)
-                                                }
+                                                workoutToBeDeleted = workout
+                                                isDeleting.toggle()
                                             }
                                             .tint(.red)
                                             .labelStyle(.iconOnly)
@@ -81,6 +82,15 @@ struct WorkoutsView: View {
             }
             .sheet(item: $selectedWorkout) { workout in
                 EditWorkoutView(model: model, workout: workout)
+            }
+            .alert("Delete workout?", isPresented: $isDeleting) {
+                Button("Delete", role: .destructive) {
+                    if let index = model.workouts.firstIndex(where: { $0.id == workoutToBeDeleted.id }) {
+                        model.workouts.remove(at: index)
+                    }
+                }
+            } message: {
+                Text("Logs will not be affected.")
             }
         }
     }

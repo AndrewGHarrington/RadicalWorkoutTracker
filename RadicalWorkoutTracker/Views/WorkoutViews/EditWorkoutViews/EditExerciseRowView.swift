@@ -16,6 +16,8 @@ struct EditExerciseRowView: View {
     @State private var targetReps = 0
     @State private var progressionSteps = 0.0
     @State private var notes = ""
+    @State private var isDeleting = false
+    @State private var exerciseToDelete = Exercise()
     
     let onDelete: () -> Void
     
@@ -115,7 +117,8 @@ struct EditExerciseRowView: View {
                 Spacer()
                 Button("Delete exercise", role: .destructive) {
                     // Delete exercise
-                    onDelete()
+                    exerciseToDelete = exercise
+                    isDeleting.toggle()
                 }
                 .buttonStyle(.borderless)
                 
@@ -131,6 +134,13 @@ struct EditExerciseRowView: View {
             targetReps = exercise.targetReps
             progressionSteps = exercise.progressionSteps
             notes = exercise.notes
+        }
+        .alert("Delete \(exerciseToDelete.name)?", isPresented: $isDeleting) {
+            Button("Delete", role: .destructive) {
+                onDelete()
+            }
+        } message: {
+            Text("Logs will not be affected.")
         }
     }
 }
