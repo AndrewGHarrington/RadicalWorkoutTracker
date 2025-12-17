@@ -86,8 +86,14 @@ struct LogsView: View {
     }
     
     func exportLogs() {
+        var workouts = [Workout]()
+        
+        for entry in logModel.entries {
+            workouts.append(entry.entry)
+        }
+        
         do {
-            exportURL = try DataService.compileJSONAndExportFile(logModel.entries)
+            exportURL = try DataService.compileJSONAndExportFile(workouts, backupType: .log)
             isExporting = true
         } catch {
             errorMessage = error.localizedDescription

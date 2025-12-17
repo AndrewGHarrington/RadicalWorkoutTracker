@@ -7,9 +7,20 @@
 
 import Foundation
 
+enum BackupType {
+    case workout
+    case log
+}
+
 struct DataService {
-    static func getTempData() -> [Workout] {
-        guard let url = Bundle.main.url(forResource: "workout_log_backup", withExtension: "json") else {
+    static func getTempData(backupType: BackupType) -> [Workout] {
+        var fileName = "workouts_backup"
+        
+        if backupType != .workout {
+            fileName = "log_backup"
+        }
+        
+        guard let url = Bundle.main.url(forResource: fileName, withExtension: "json") else {
             return [Workout]()
         }
         
@@ -39,11 +50,11 @@ struct DataService {
         return [Workout]()
     }
     
-    static func compileJSONAndExportFile(_ logEntries: [LogEntry]) throws -> URL {
-        var workouts = [Workout]()
+    static func compileJSONAndExportFile(_ workouts: [Workout], backupType: BackupType) throws -> URL {
+        var fileName = "workouts_backup.json"
         
-        for entry in logEntries {
-            workouts.append(entry.entry)
+        if backupType != .workout {
+            fileName = "log_backup.json"
         }
         
         var json = "[\n"
@@ -108,11 +119,9 @@ struct DataService {
         
         json += "]"
         
-        print(json)
-        
         // Write to temp file
         let tempURL = FileManager.default.temporaryDirectory
-            .appendingPathComponent("workout_log_backup.json")
+            .appendingPathComponent(fileName)
         
         try json.write(to: tempURL, atomically: true, encoding: .utf8)
         
