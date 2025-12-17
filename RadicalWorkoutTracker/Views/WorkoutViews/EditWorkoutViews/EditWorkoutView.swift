@@ -13,7 +13,13 @@ struct EditWorkoutView: View {
     @State private var workoutName = "Workout 1"
     @State private var exerciseName = ""
     @State private var exercises = [Exercise]()
+    @State private var isMovingRows = false
     @Environment(\.dismiss) var dismiss
+    @Environment(\.editMode) private var editMode
+    
+    private var isEditing: Bool {
+        editMode?.wrappedValue.isEditing == true
+    }
     
     var body: some View {
         NavigationView {
@@ -43,14 +49,25 @@ struct EditWorkoutView: View {
                 ScrollViewReader { proxy in
                     List {
                         ForEach(exercises) { exercise in
-                            Section {
-                                EditExerciseRowView(exercise: exercise) {
-                                    if let index = exercises.firstIndex(where: { $0.id == exercise.id }) {
-                                        exercises.remove(at: index)
-                                    }
+                            if isMovingRows {
+                                HStack {
+                                    Text(exercise.name)
+                                    Spacer()
+                                    Image(systemName: "line.horizontal.3")
                                 }
-                                .id(exercise.id)
+                            } else {
+                                Section {
+                                    EditExerciseRowView(exercise: exercise) {
+                                        if let index = exercises.firstIndex(where: { $0.id == exercise.id }) {
+                                            exercises.remove(at: index)
+                                        }
+                                    }
+                                    .id(exercise.id)
+                                }
                             }
+                        }
+                        .onMove { indexSet, destination in
+                            exercises.move(fromOffsets: indexSet, toOffset: destination)
                         }
                     }
                     .onChange(of: exercises.count) {
@@ -96,6 +113,26 @@ struct EditWorkoutView: View {
                         }
                         
                         dismiss()
+                    }
+                }
+                
+                ToolbarItem(placement: .automatic) {
+                    Button {
+                        isMovingRows.toggle()
+                        withAnimation {
+                            editMode?.wrappedValue = isEditing ? .inactive : .active
+                        }
+                    }  label: {
+                        Label {
+                            if isEditing {
+                                Text("Done")
+                            }
+                        } icon: {
+                            if !isEditing {
+                                Image(systemName: "line.horizontal.3")
+                                    .accessibilityLabel("Edit row order")
+                            }
+                        }
                     }
                 }
                 
