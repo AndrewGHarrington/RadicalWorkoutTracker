@@ -8,29 +8,25 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct JSONFile: FileDocument {
-
+struct JSONDocument: FileDocument {
     static var readableContentTypes: [UTType] { [.json] }
-
-    var url: URL?
-
-    init(url: URL?) {
-        self.url = url
+    
+    let fileURL: URL
+    
+    init(fileURL: URL) {
+        self.fileURL = fileURL
     }
-
+    
     init(configuration: ReadConfiguration) throws {
-        // Not needed for export
+        throw CocoaError(.fileReadUnsupportedScheme)
     }
-
+    
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-        guard let url,
-              let data = try? Data(contentsOf: url) else {
-            throw CocoaError(.fileNoSuchFile)
-        }
-
-        return FileWrapper(regularFileWithContents: data)
+        return try FileWrapper(url: fileURL)
     }
 }
+
+
 
 struct LogsView: View {
     @EnvironmentObject var logModel: LogEntryModel
@@ -71,26 +67,30 @@ struct LogsView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Export logs", systemImage: "square.and.arrow.up") {
                         // MARK: Export logs
-                        do {
-                            exportURL = try WorkoutExporter.exportToJSON()
-                            isExporting = true
-                        } catch {
-                            errorMessage = error.localizedDescription
-                        }
+                        exportLogs()
                     }
                     .labelStyle(.iconOnly)
                 }
             }
             .fileExporter(
                 isPresented: $isExporting,
-                document: JSONFile(url: exportURL),
+                document: exportURL.map { JSONDocument(fileURL: $0) },
                 contentType: .json,
-                defaultFilename: "workouts_backup"
+                defaultFilename: "workout_log_backup"
             ) { result in
-                if case .failure(let error) = result {
+                if case let .failure(error) = result {
                     errorMessage = error.localizedDescription
                 }
             }
+        }
+    }
+    
+    func exportLogs() {
+        do {
+            exportURL = try DataService.compileJSONAndExportFile(logModel.entries)
+            isExporting = true
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
     

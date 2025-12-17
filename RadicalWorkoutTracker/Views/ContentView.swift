@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var model = WorkoutModel()
     @StateObject var logModel = LogEntryModel()
     
     var body: some View {
@@ -27,7 +28,16 @@ struct ContentView: View {
                         Text("Log")
                     }
                 }
+            
+            BackupWorkouts()
+                .tabItem {
+                    VStack {
+                        Image(systemName: "gear")
+                        Text("Backup")
+                    }
+                }
         }
+        .environmentObject(model)
         .environmentObject(logModel)
     }
 }

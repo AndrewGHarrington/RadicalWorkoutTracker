@@ -37,5 +37,5 @@ struct LogEntryDetailView: View {
 }
 
 #Preview {
-    LogEntryDetailView(entry: LogEntry())
+    LogEntryDetailView(entry: LogEntry(id: UUID(), entry: Workout()))
 }

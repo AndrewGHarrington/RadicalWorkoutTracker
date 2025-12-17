@@ -9,5 +9,5 @@ import Foundation
 
 struct LogEntry: Identifiable, Codable {
     var id = UUID()
-    var entry = Workout()
+    var entry: Workout
 }

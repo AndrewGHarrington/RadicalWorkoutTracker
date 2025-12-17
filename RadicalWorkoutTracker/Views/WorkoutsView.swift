@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct WorkoutsView: View {
-    @ObservedObject var model = WorkoutModel()
+    @EnvironmentObject var model: WorkoutModel
     @EnvironmentObject var logModel: LogEntryModel
     @Environment(\.dismiss) var dismiss
     @State private var isAddingWorkouts = false
@@ -88,5 +88,6 @@ struct WorkoutsView: View {
 
 #Preview {
     WorkoutsView()
+        .environmentObject(WorkoutModel())
         .environmentObject(LogEntryModel())
 }
