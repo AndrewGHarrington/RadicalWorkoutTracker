@@ -19,10 +19,13 @@ struct BackupWorkouts: View {
     @State private var didFinishImport = false
     @State private var alertTitle = "Workout Imported"
     @State private var backupType = BackupType.workout
+    @State private var isDeletingAllData = false
     
     
     var body: some View {
         VStack {
+            Spacer()
+            
             Button("Backup Workouts") {
                 fileName = "workouts_backup"
                 export(workoutModel.workouts, backupType: .workout)
@@ -71,6 +74,30 @@ struct BackupWorkouts: View {
                 .foregroundStyle(.white)
                 .font(.title3)
                 .bold()
+            
+            Spacer()
+            
+            Button("Delete All Data") {
+                alertTitle = "Delete all data?"
+                isDeletingAllData.toggle()
+            }
+                .frame(maxWidth: 250, maxHeight: 50) // 245, 34, 73
+                .background(Color(red: 245/255, green: 34/255, blue: 73/255))
+                .clipShape(.rect(cornerRadius: 8))
+                .foregroundStyle(.white)
+                .font(.title3)
+                .bold()
+                .padding(.bottom)
+        }
+        .alert(alertTitle, isPresented: $isDeletingAllData) {
+            Button("Cancel", role: .cancel) {}
+            
+            Button("Delete", role: .confirm) {
+                workoutModel.workouts = []
+                logModel.entries = []
+            }
+        } message: {
+            Text("This will delete all workouts and logs. You can't undo this.")
         }
         .alert(alertTitle, isPresented: $didFinishImport, actions: {
             Button("OK", role: .close) {}
@@ -128,10 +155,10 @@ struct BackupWorkouts: View {
                     workoutModel.workouts = workouts
                     alertTitle = "Workout Imported"
                 } else {
-                    let workouts = DataService.getTempData(backupType: .log)
+                    let newWorkouts = workouts
                     var entries = [LogEntry]()
                     
-                    for workout in workouts {
+                    for workout in newWorkouts {
                         let logEntry = LogEntry(entry: workout)
                         entries.append(logEntry)
                     }
