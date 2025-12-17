@@ -32,6 +32,7 @@ struct ExecuteSetRowView: View {
             
             VStack {
                 TextField("", value: $completedReps, format: .number)
+                    .keyboardType(.numberPad)
                     .multilineTextAlignment(.center)
                     .accessibilityLabel("Completed reps")
                 Stepper("Completed Reps", value: $completedReps, in: 0...10000)
@@ -45,6 +46,7 @@ struct ExecuteSetRowView: View {
             
             VStack {
                 TextField("", value: $weight, format: .number)
+                    .keyboardType(.decimalPad)
                     .multilineTextAlignment(.center)
                     .accessibilityLabel("Weight")
                 Stepper("Weight Reps", value: $weight, in: 0...10000, step: progressionSteps)
