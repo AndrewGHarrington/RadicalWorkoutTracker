@@ -62,7 +62,8 @@ struct ExecuteSetRowView: View {
                     .clipShape(.rect(cornerRadius: 5))
                     .foregroundStyle(.white)
                     .bold()
-                    .opacity(weightAdjusted ? 1 : 0)
+                    .opacity(weightAdjusted ? 1 : 1)
+                    .offset(x: -10)
             }
         }
         .onAppear {

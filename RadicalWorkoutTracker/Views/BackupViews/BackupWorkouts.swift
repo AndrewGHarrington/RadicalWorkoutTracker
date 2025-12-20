@@ -23,101 +23,104 @@ struct BackupWorkouts: View {
     
     
     var body: some View {
-        VStack {
-            Spacer()
-            
-            Button("Backup Workouts") {
-                fileName = "workouts_backup"
-                export(workoutModel.workouts, backupType: .workout)
-            }
-                .frame(maxWidth: 250, maxHeight: 50)
+        GeometryReader { geo in
+            VStack {
+                Spacer()
+                
+                Button("Backup Workouts") {
+                    fileName = "workouts_backup"
+                    export(workoutModel.workouts, backupType: .workout)
+                }
+                .frame(maxWidth: geo.size.width / 1.6, maxHeight: geo.size.height / 15)
                 .background(Color(red: 87/255, green: 204/255, blue: 153/255))
                 .clipShape(.rect(cornerRadius: 8))
                 .foregroundStyle(.white)
                 .font(.title3)
                 .bold()
-            Button("Backup Log") {
-                var workouts = [Workout]()
-                
-                for entry in logModel.entries {
-                    workouts.append(entry.entry)
+                Button("Backup Log") {
+                    var workouts = [Workout]()
+                    
+                    for entry in logModel.entries {
+                        workouts.append(entry.entry)
+                    }
+                    
+                    fileName = "log_backup"
+                    export(workouts, backupType: .log)
                 }
-                
-                fileName = "log_backup"
-                export(workouts, backupType: .log)
-            }
-                .frame(maxWidth: 250, maxHeight: 50)
+                .frame(maxWidth: geo.size.width / 1.6, maxHeight: geo.size.height / 15)
                 .background(Color(red: 56/255, green: 163/255, blue: 165/255))
                 .clipShape(.rect(cornerRadius: 8))
                 .foregroundStyle(.white)
                 .font(.title3)
                 .bold()
                 .padding(.bottom, 50)
-            
-            Button("Import Workouts") {
-                backupType = .workout
-                isShowingImporter.toggle()
-            }
-                .frame(maxWidth: 250, maxHeight: 50)
+                
+                Button("Import Workouts") {
+                    backupType = .workout
+                    isShowingImporter.toggle()
+                }
+                .frame(maxWidth: geo.size.width / 1.6, maxHeight: geo.size.height / 15)
                 .background(Color(red: 34/255, green: 87/255, blue: 122/255))
                 .clipShape(.rect(cornerRadius: 8))
                 .foregroundStyle(.white)
                 .font(.title3)
                 .bold()
-            Button("Import Log") {
-                backupType = .log
-                isShowingImporter.toggle()
-            }
-                .frame(maxWidth: 250, maxHeight: 50)
+                Button("Import Log") {
+                    backupType = .log
+                    isShowingImporter.toggle()
+                }
+                .frame(maxWidth: geo.size.width / 1.6, maxHeight: geo.size.height / 15)
                 .background(Color(red: 1/255, green: 42/255, blue: 74/255))
                 .clipShape(.rect(cornerRadius: 8))
                 .foregroundStyle(.white)
                 .font(.title3)
                 .bold()
-            
-            Spacer()
-            
-            Button("Delete All Data") {
-                alertTitle = "Delete all data?"
-                isDeletingAllData.toggle()
-            }
-                .frame(maxWidth: 250, maxHeight: 50) // 245, 34, 73
+                
+                Spacer()
+                
+                Button("Delete All Data") {
+                    alertTitle = "Delete all data?"
+                    isDeletingAllData.toggle()
+                }
+                .frame(maxWidth: geo.size.width / 1.6, maxHeight: geo.size.height / 15)
                 .background(Color(red: 245/255, green: 34/255, blue: 73/255))
                 .clipShape(.rect(cornerRadius: 8))
                 .foregroundStyle(.white)
                 .font(.title3)
                 .bold()
                 .padding(.bottom)
-        }
-        .alert(alertTitle, isPresented: $isDeletingAllData) {
-            Button("Cancel", role: .cancel) {}
-            
-            Button("Delete", role: .confirm) {
-                workoutModel.workouts = []
-                logModel.entries = []
             }
-        } message: {
-            Text("This will delete all workouts and logs. You can't undo this.")
-        }
-        .alert(alertTitle, isPresented: $didFinishImport, actions: {
-            Button("OK", role: .close) {}
-        })
-        .fileExporter(
-            isPresented: $isExporting,
-            document: exportURL.map { JSONDocument(fileURL: $0) },
-            contentType: .json,
-            defaultFilename: fileName
-        ) { result in
-            if case let .failure(error) = result {
-                errorMessage = error.localizedDescription
+            .frame(width: geo.size.width, height: geo.size.height)
+            .alert(alertTitle, isPresented: $isDeletingAllData) {
+                Button("Cancel", role: .cancel) {}
+                
+                Button("Delete", role: .confirm) {
+                    workoutModel.workouts = []
+                    logModel.entries = []
+                }
+            } message: {
+                Text("This will delete all workouts and logs. You can't undo this.")
             }
-        }
-        .fileImporter(
-            isPresented: $isShowingImporter,
-            allowedContentTypes: [.json],
-            allowsMultipleSelection: false
-        ) { result in
-            handleImport(result, backupType: backupType)
+            .alert(alertTitle, isPresented: $didFinishImport, actions: {
+                Button("OK", role: .close) {}
+            })
+            .fileExporter(
+                isPresented: $isExporting,
+                document: exportURL.map { JSONDocument(fileURL: $0) },
+                contentType: .json,
+                defaultFilename: fileName
+            ) { result in
+                if case let .failure(error) = result {
+                    errorMessage = error.localizedDescription
+                }
+            }
+            .fileImporter(
+                isPresented: $isShowingImporter,
+                allowedContentTypes: [.json],
+                allowsMultipleSelection: false
+            ) { result in
+                handleImport(result, backupType: backupType)
+            }
         }
     }
     
