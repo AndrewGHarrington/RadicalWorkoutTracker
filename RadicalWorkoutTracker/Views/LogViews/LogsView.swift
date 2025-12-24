@@ -41,7 +41,7 @@ struct LogsView: View {
                     Text("No entries in log")
                 } else {
                     List {
-                        ForEach(logModel.entries) { entry in
+                        ForEach(logModel.entries.reversed()) { entry in
                             NavigationLink {
                                 LogEntryDetailView(entry: entry)
                             } label: {
